@@ -29,10 +29,10 @@ const DetalheJoiaScreen = () => {
         setEditValues({
           nome: data.nome || '',
           referencia: data.referencia || '',
-          valorAtacado: data.valorAtacado ? data.valorAtacado.toString() : '',
-          valorRevenda: data.valorRevenda ? data.valorRevenda.toString() : '',
-          valorBruto: data.valorBruto ? data.valorBruto.toString() : '',
-          valorBanho: data.valorBanho ? data.valorBanho.toString() : '',
+          valorAtacado: data.valorAtacado ? formatCurrency(data.valorAtacado) : '',
+          valorRevenda: data.valorRevenda ? formatCurrency(data.valorRevenda) : '',
+          valorBruto: data.valorBruto ? formatCurrency(data.valorBruto) : '',
+          valorBanho: data.valorBanho ? formatCurrency(data.valorBanho) : '',
           quantidade: data.quantidade ? data.quantidade.toString() : '0',
         });
         setFotoPreview(data.foto || null);
@@ -42,8 +42,31 @@ const DetalheJoiaScreen = () => {
     fetchJoia();
   }, [id]);
 
+  const formatCurrency = (value) => {
+    if (!value && value !== 0) return '';
+    const numericValue = typeof value === 'string' ? parseFloat(value.replace(/[^0-9.,]/g, '').replace(',', '.')) : value;
+    return numericValue.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+    });
+  };
+
+  const parseCurrency = (value) => {
+    const numericValue = value.replace(/[^0-9.,]/g, '').replace(',', '.');
+    return parseFloat(numericValue) || 0;
+  };
+
   const handleInputChange = (field, value) => {
-    setEditValues((prev) => ({ ...prev, [field]: value }));
+    if (['valorAtacado', 'valorRevenda', 'valorBruto', 'valorBanho'].includes(field)) {
+      const numericValue = value.replace(/[^0-9.,]/g, '').replace(',', '.');
+      setEditValues((prev) => ({ ...prev, [field]: formatCurrency(numericValue) }));
+    } else if (field === 'quantidade') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setEditValues((prev) => ({ ...prev, [field]: numericValue }));
+    } else {
+      setEditValues((prev) => ({ ...prev, [field]: value }));
+    }
     setFormError(null);
   };
 
@@ -89,10 +112,10 @@ const DetalheJoiaScreen = () => {
       setFormError('Os campos Nome, Referência, Valor Revenda e Quantidade são obrigatórios.');
       return;
     }
-    const revendaValue = parseFloat(valorRevenda);
-    const atacadoValue = valorAtacado ? parseFloat(valorAtacado) : null;
-    const brutoValue = valorBruto ? parseFloat(valorBruto) : null;
-    const banhoValue = valorBanho ? parseFloat(valorBanho) : null;
+    const revendaValue = parseCurrency(valorRevenda);
+    const atacadoValue = valorAtacado ? parseCurrency(valorAtacado) : null;
+    const brutoValue = valorBruto ? parseCurrency(valorBruto) : null;
+    const banhoValue = valorBanho ? parseCurrency(valorBanho) : null;
     const quantidadeValue = parseInt(quantidade, 10);
     if (revendaValue <= 0 || quantidadeValue <= 0) {
       setFormError('Valor de revenda e quantidade devem ser maiores que zero.');
@@ -179,8 +202,8 @@ const DetalheJoiaScreen = () => {
               <p className={Styles.label}>Valor Atacado (R$):</p>
               <input
                 className={Styles.input}
-                type="number"
-                step="0.01"
+                type="text"
+                placeholder="R$ 0,00"
                 value={editValues.valorAtacado}
                 onChange={(e) => handleInputChange('valorAtacado', e.target.value)}
               />
@@ -189,8 +212,8 @@ const DetalheJoiaScreen = () => {
               <p className={Styles.label}>Valor Revenda (R$):</p>
               <input
                 className={Styles.input}
-                type="number"
-                step="0.01"
+                type="text"
+                placeholder="R$ 0,00"
                 value={editValues.valorRevenda}
                 onChange={(e) => handleInputChange('valorRevenda', e.target.value)}
               />
@@ -201,8 +224,8 @@ const DetalheJoiaScreen = () => {
               <p className={Styles.label}>Valor Bruto (R$):</p>
               <input
                 className={Styles.input}
-                type="number"
-                step="0.01"
+                type="text"
+                placeholder="R$ 0,00"
                 value={editValues.valorBruto}
                 onChange={(e) => handleInputChange('valorBruto', e.target.value)}
               />
@@ -211,8 +234,8 @@ const DetalheJoiaScreen = () => {
               <p className={Styles.label}>Valor Banho (R$):</p>
               <input
                 className={Styles.input}
-                type="number"
-                step="0.01"
+                type="text"
+                placeholder="R$ 0,00"
                 value={editValues.valorBanho}
                 onChange={(e) => handleInputChange('valorBanho', e.target.value)}
               />
@@ -223,7 +246,8 @@ const DetalheJoiaScreen = () => {
               <p className={Styles.label}>Quantidade:</p>
               <input
                 className={Styles.input}
-                type="number"
+                type="text"
+                placeholder="0"
                 value={editValues.quantidade}
                 onChange={(e) => handleInputChange('quantidade', e.target.value)}
               />

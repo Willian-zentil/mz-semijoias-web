@@ -1,0 +1,75 @@
+.homeContainer {
+  padding: 70px 10px 10px 10px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
+  min-height: 100vh;
+  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+  display: flex;
+  justify-content: center;
+}
+
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Ajusta para responsividade */
+  gap: 10px;
+  padding-bottom: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none; /* Remove o sublinhado padrão do <a> */
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cardImage {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  object-fit: contain;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 0;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 480px) {
+  .cardList {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Cards menores em telas pequenas */
+    gap: 8px;
+  }
+
+  .card {
+    height: 100px;
+    padding: 10px;
+  }
+
+  .cardImage {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 8px;
+  }
+
+  .cardTitle {
+    font-size: 14px;
+  }
+}

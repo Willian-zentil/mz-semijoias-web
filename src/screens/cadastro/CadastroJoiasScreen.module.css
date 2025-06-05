@@ -1,0 +1,163 @@
+.cadastroContainer {
+  padding: 70px 20px 20px 20px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
+  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+  min-height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.cadastroHeader {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.cadastroLabel {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.cadastroInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.cadastroInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.cadastroUploadButton {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #007bff;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cadastroUploadButton:hover {
+  background-color: #0056b3;
+}
+
+.cadastroImagePreview {
+  width: 200px;
+  height: 150px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cadastroSubmitButton {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cadastroSubmitButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.cadastroSubmitButton:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+  max-width: 400px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.modalMessage {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.modalButton {
+  background-color: #007bff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modalButton:hover {
+  background-color: #0056b3;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 480px) {
+  .cadastroInput {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .cadastroUploadButton {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .cadastroImagePreview {
+    width: 150px;
+    height: 112.5px;
+  }
+
+  .cadastroSubmitButton {
+    font-size: 14px;
+    padding: 12px;
+  }
+}

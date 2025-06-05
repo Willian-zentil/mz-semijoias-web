@@ -1,0 +1,254 @@
+.listContainer {
+  min-height: 100vh;
+  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+  padding: 70px 10px 10px 10px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
+}
+
+.joiasList {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cardContentWrapper {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+}
+
+.cardImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.noImage {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  font-size: 14px;
+  color: #555;
+}
+
+.cardContent {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.cardPrice {
+  font-size: 16px;
+  color: #28a745;
+}
+
+.cardQuantity {
+  font-size: 14px;
+  color: #555;
+}
+
+.cardActions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 10px;
+}
+
+.actionButton {
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.buyButton {
+  background-color: #28a745;
+}
+
+.buyButton:hover {
+  background-color: #218838;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0000ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.errorText {
+  font-size: 16px;
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.retryButton {
+  background-color: #007bff;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background-color: #0056b3;
+}
+
+.emptyText {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  padding: 20px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalButton {
+  flex: 1;
+  padding: 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.confirmButton {
+  background-color: #dc3545;
+}
+
+.confirmButton:hover {
+  background-color: #c82333;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 480px) {
+  .card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cardImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .cardContent {
+    padding: 5px;
+    text-align: center;
+  }
+
+  .cardActions {
+    flex-direction: row;
+    padding: 5px 0;
+  }
+
+  .actionButton {
+    padding: 5px;
+    margin: 0 5px;
+    font-size: 12px;
+  }
+}

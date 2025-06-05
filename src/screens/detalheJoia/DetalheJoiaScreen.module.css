@@ -1,0 +1,171 @@
+.container {
+  min-height: 100vh;
+  padding: 70px 20px 20px 20px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
+  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scrollContainer {
+  overflow-y: auto;
+  max-height: calc(100vh - 60px); /* Ajusta a altura considerando o Navbar */
+}
+
+.contentContainer {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.value {
+  font-size: 16px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.input {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.buttonContainer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.saveButton {
+  padding: 10px 20px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background-color: #218838;
+}
+
+.backButton {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.backButton:hover {
+  background-color: #5a6268;
+}
+
+.error {
+  color: red;
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.formError {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.rowContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.column {
+  flex: 1;
+  align-items: center;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0000ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 480px) {
+  .input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .saveButton {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .backButton {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  .image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .rowContainer {
+    flex-direction: column;
+  }
+
+  .column {
+    margin-bottom: 10px;
+  }
+}

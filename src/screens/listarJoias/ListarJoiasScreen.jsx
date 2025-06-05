@@ -21,6 +21,27 @@ const ListaJoiasScreen = () => {
     fetchJoias();
   }, []);
 
+  const calculateProfit = (joia) => {
+    const valorRevenda = joia.valorRevenda || 0;
+    const valorBanho = joia.valorBanho || 0;
+    const valorAtacado = joia.valorAtacado || 0;
+    const valorBruto = joia.valorBruto || 0;
+    const custo = valorBanho + valorAtacado + valorBruto;
+    const lucro = valorRevenda - custo;
+    return lucro;
+  };
+
+  const calculateProfitPercentage = (joia) => {
+    const valorBanho = joia.valorBanho || 0;
+    const valorAtacado = joia.valorAtacado || 0;
+    const valorBruto = joia.valorBruto || 0;
+    const custo = valorBanho + valorAtacado + valorBruto;
+    if (custo === 0) return 0; // Evita divisão por zero
+    const lucro = calculateProfit(joia);
+    const percentage = (lucro / custo) * 100;
+    return percentage.toFixed(2); // Arredonda para 2 casas decimais
+  };
+
   const handleDeleteClick = (joia) => {
     setJoiaToDelete(joia);
     setModalVisible(true);
@@ -85,9 +106,15 @@ const ListaJoiasScreen = () => {
                 <div className={Styles.noImage}>Sem imagem</div>
               )}
               <div className={Styles.cardContent}>
-                <p className={Styles.cardTitle}>{joia.nome}</p>
-                <p className={Styles.cardPrice}>R${joia.valorRevenda?.toFixed(2)}</p>
-                <p className={Styles.cardQuantity}>Quantidade: {joia.quantidade}</p>
+                <div>
+                  <p className={Styles.cardTitle}>{joia.nome}</p>
+                  <p className={Styles.cardPrice}>R${joia.valorRevenda?.toFixed(2)}</p>
+                  <p className={Styles.cardQuantity}>Quantidade: {joia.quantidade}</p>
+                </div>
+                <div className={Styles.contentLucro}>
+                  <p className={Styles.cardProfit}>Lucro: R${calculateProfit(joia).toFixed(2)}</p>
+                  <p className={Styles.cardProfitPercentage}>Porcentagem %: {calculateProfitPercentage(joia)}%</p>
+                </div>
               </div>
             </div>
             <div className={Styles.cardActions}>

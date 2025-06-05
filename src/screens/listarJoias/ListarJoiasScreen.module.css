@@ -16,7 +16,7 @@
   justify-content: space-between;
   background-color: #fff;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -51,10 +51,29 @@
   color: #555;
 }
 
+.contentLucro {
+  margin-top: 40px;
+}
+
+.cardProfit {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.cardProfitPercentage {
+  font-weight: 500;
+}
+
 .cardContent {
   flex: 1;
-  padding: 10px;
   display: flex;
+  justify-content: space-around;
+}
+
+.cardContent div {
+
+  padding: 10px;
+
   flex-direction: column;
   justify-content: center;
 }
@@ -68,11 +87,11 @@
 .cardPrice {
   font-size: 16px;
   color: #28a745;
+  font-weight: 500;
 }
 
 .cardQuantity {
-  font-size: 14px;
-  color: #555;
+  font-weight: 500;
 }
 
 .cardActions {

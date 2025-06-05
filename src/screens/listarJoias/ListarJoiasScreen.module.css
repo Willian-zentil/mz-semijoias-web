@@ -1,7 +1,9 @@
 .listContainer {
   min-height: 100vh;
-  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
-  padding: 70px 10px 10px 10px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
+  background-color: #f3f4f6;
+  /* Equivalente a bg-gray-100 */
+  padding: 70px 10px 10px 10px;
+  /* Adiciona padding-top para evitar sobreposição com o Navbar */
 }
 
 .joiasList {
@@ -29,12 +31,14 @@
   display: flex;
   flex: 1;
   cursor: pointer;
+  align-items: center;
 }
 
 .cardImage {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
+  margin: 0 20px;
 }
 
 .noImage {
@@ -77,6 +81,15 @@
   flex-direction: column;
   justify-content: center;
   padding-right: 10px;
+}
+
+.cardActions button {
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 10px 0;
 }
 
 .actionButton {
@@ -123,8 +136,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .errorContainer {

@@ -7,6 +7,8 @@ const ListaJoiasScreen = () => {
   const [joias, setJoias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [joiaToDelete, setJoiaToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +20,33 @@ const ListaJoiasScreen = () => {
     };
     fetchJoias();
   }, []);
+
+  const handleDeleteClick = (joia) => {
+    setJoiaToDelete(joia);
+    setModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!joiaToDelete) return;
+
+    try {
+      const { error } = await supabase.from('joias').delete().eq('id', joiaToDelete.id);
+      if (error) throw new Error(error.message);
+
+      setJoias(joias.filter((joia) => joia.id !== joiaToDelete.id));
+      setModalVisible(false);
+      setJoiaToDelete(null);
+    } catch (error) {
+      setError(`Erro ao excluir joia: ${error.message}`);
+      setModalVisible(false);
+      setJoiaToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setModalVisible(false);
+    setJoiaToDelete(null);
+  };
 
   if (loading) {
     return (
@@ -63,11 +92,24 @@ const ListaJoiasScreen = () => {
             </div>
             <div className={Styles.cardActions}>
               <button className={Styles.buyButton}>Comprar</button>
-              <button className={Styles.deleteButton}>Excluir</button>
+              <button className={Styles.deleteButton} onClick={() => handleDeleteClick(joia)}>Excluir</button>
             </div>
           </div>
         ))}
       </div>
+
+      {modalVisible && (
+        <div className={Styles.modalOverlay}>
+          <div className={Styles.modalContainer}>
+            <h2 className={Styles.modalTitle}>Confirmar Exclusão</h2>
+            <p>Deseja realmente excluir a joia "{joiaToDelete?.nome}"?</p>
+            <div className={Styles.modalButtons}>
+              <button className={`${Styles.modalButton} ${Styles.confirmButton}`} onClick={handleConfirmDelete}>Sim</button>
+              <button className={`${Styles.modalButton} ${Styles.cancelButton}`} onClick={handleCancelDelete}>Não</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

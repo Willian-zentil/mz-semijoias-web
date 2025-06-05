@@ -25,7 +25,7 @@ const Navbar = () => {
     <nav className={Styles.navbar}>
       <div className={Styles.navbarContainer}>
         <div className={Styles.navbarBrand}>
-          <h1 onClick={() => handleNavigate('/')}>JoiasApp</h1>
+          <h1 onClick={() => handleNavigate('/')}>MZ SEMI JOIAS</h1>
         </div>
         <div className={Styles.hamburger} onClick={toggleMenu}>
           <span className={`${Styles.bar} ${isMenuOpen ? Styles.open : ''}`}></span>

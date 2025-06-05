@@ -11,6 +11,8 @@ const DetalheJoiaScreen = () => {
   const [error, setError] = useState(null);
   const [editValues, setEditValues] = useState({});
   const [formError, setFormError] = useState(null);
+  const [newFoto, setNewFoto] = useState(null);
+  const [fotoPreview, setFotoPreview] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +35,7 @@ const DetalheJoiaScreen = () => {
           valorBanho: data.valorBanho ? data.valorBanho.toString() : '',
           quantidade: data.quantidade ? data.quantidade.toString() : '0',
         });
+        setFotoPreview(data.foto || null);
       }
       setLoading(false);
     };
@@ -42,6 +45,41 @@ const DetalheJoiaScreen = () => {
   const handleInputChange = (field, value) => {
     setEditValues((prev) => ({ ...prev, [field]: value }));
     setFormError(null);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewFoto(file);
+      setFotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const uploadImage = async (file) => {
+    if (!file) return joia.foto;
+
+    try {
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Você precisa estar logado para fazer upload de imagens.');
+
+      const { data, error } = await supabase.storage
+        .from('joias')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: 'image/jpeg',
+          metadata: { user_id: session.user.id },
+        });
+
+      if (error) throw new Error(error.message || 'Falha ao fazer upload da imagem.');
+
+      const { data: urlData } = supabase.storage.from('joias').getPublicUrl(fileName);
+      return urlData.publicUrl;
+    } catch (error) {
+      setError(`Erro ao fazer upload da imagem: ${error.message}`);
+      return null;
+    }
   };
 
   const handleSalvar = async () => {
@@ -61,6 +99,12 @@ const DetalheJoiaScreen = () => {
       return;
     }
 
+    let newFotoUrl = joia.foto;
+    if (newFoto) {
+      newFotoUrl = await uploadImage(newFoto);
+      if (!newFotoUrl) return; // Aborta se o upload falhar
+    }
+
     const { error } = await supabase.from('joias').update({
       nome: nome.trim(),
       referencia: referencia.trim(),
@@ -69,10 +113,11 @@ const DetalheJoiaScreen = () => {
       valorBruto: brutoValue,
       valorBanho: banhoValue,
       quantidade: quantidadeValue,
+      foto: newFotoUrl,
     }).eq('id', id);
     if (error) setError(`Erro: ${error.message}`);
     else {
-      setJoia((prev) => ({ ...prev, ...editValues }));
+      setJoia((prev) => ({ ...prev, ...editValues, foto: newFotoUrl }));
       alert('Sucesso: Joia atualizada com sucesso!');
       navigate('/lista-joias');
     }
@@ -100,7 +145,14 @@ const DetalheJoiaScreen = () => {
       <div className={Styles.scrollContainer}>
         <div className={Styles.contentContainer}>
           <h1 className={Styles.title}>{joia.nome}</h1>
-          {joia.foto && <img src={joia.foto} alt={joia.nome} className={Styles.image} />}
+          {fotoPreview && <img src={fotoPreview} alt={joia.nome} className={Styles.image} />}
+          <label className={Styles.label}>Nova Foto:</label>
+          <input
+            type="file"
+            accept="image/*"
+            className={Styles.input}
+            onChange={handleImageChange}
+          />
           {formError && <p className={Styles.formError}>{formError}</p>}
           <div className={Styles.rowContainer}>
             <div className={Styles.column}>

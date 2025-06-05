@@ -117,25 +117,17 @@ const CadastroJoiasScreen = () => {
   };
 
   const handleSubmit = async () => {
-    console.log('Botão CADASTRAR pressionado!');
     if (isLoading) return;
     setIsLoading(true);
 
     const { data: { session } } = await supabase.auth.getSession();
-    console.log('Sessão Supabase verificada:', session);
     if (!session) {
       showModal('Erro', 'Você precisa estar logado para cadastrar joias.');
       setIsLoading(false);
       return;
     }
 
-    console.log('nome:', nome);
-    console.log('referencia:', referencia);
-    console.log('valorRevenda:', valorRevenda);
-    console.log('quantidade:', quantidade);
-
     if (!nome.trim() || !referencia.trim() || !valorRevenda || !quantidade) {
-      console.log('Campos obrigatórios não preenchidos!');
       showModal('Erro', 'Por favor, preencha todos os campos obrigatórios: Nome, Referência, Valor Revenda e Quantidade.');
       setIsLoading(false);
       return;
@@ -208,6 +200,15 @@ const CadastroJoiasScreen = () => {
         placeholder="Digite o nome da joia"
       />
 
+      <label className={Styles.cadastroLabel}>Foto</label>
+      <input
+        type="file"
+        accept="image/*"
+        className={Styles.cadastroUploadButton}
+        onChange={handleImageChange}
+      />
+      {fotoPreview && <img src={fotoPreview} alt="Prévia da imagem" className={Styles.cadastroImagePreview} />}
+
       <label className={Styles.cadastroLabel}>Referência *</label>
       <input
         className={Styles.cadastroInput}
@@ -228,27 +229,6 @@ const CadastroJoiasScreen = () => {
         }}
         placeholder="Digite o valor atacado (opcional)"
       />
-
-      <label className={Styles.cadastroLabel}>Valor Revenda *</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={valorRevenda}
-        onChange={(e) => {
-          const numericValue = e.target.value.replace(/[^0-9]/g, '');
-          setValorRevenda(formatCurrency(numericValue));
-        }}
-        placeholder="Digite o valor de revenda"
-      />
-
-      <label className={Styles.cadastroLabel}>Foto</label>
-      <input
-        type="file"
-        accept="image/*"
-        className={Styles.cadastroUploadButton}
-        onChange={handleImageChange}
-      />
-      {fotoPreview && <img src={fotoPreview} alt="Prévia da imagem" className={Styles.cadastroImagePreview} />}
 
       <label className={Styles.cadastroLabel}>Valor Bruto</label>
       <input
@@ -281,6 +261,18 @@ const CadastroJoiasScreen = () => {
         value={quantidade}
         onChange={(e) => setQuantidade(formatQuantity(e.target.value))}
         placeholder="Digite a quantidade"
+      />
+
+      <label className={Styles.cadastroLabel}>Valor Revenda *</label>
+      <input
+        className={Styles.cadastroInput}
+        type="text"
+        value={valorRevenda}
+        onChange={(e) => {
+          const numericValue = e.target.value.replace(/[^0-9]/g, '');
+          setValorRevenda(formatCurrency(numericValue));
+        }}
+        placeholder="Digite o valor de revenda"
       />
 
       <button

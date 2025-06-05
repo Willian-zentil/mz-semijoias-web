@@ -34,7 +34,8 @@
   align-items: center;
 }
 
-.cardImage {
+.cardImage,
+.noImage {
   width: 150px;
   height: 150px;
   object-fit: cover;
@@ -42,8 +43,6 @@
 }
 
 .noImage {
-  width: 100px;
-  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;

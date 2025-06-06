@@ -142,7 +142,7 @@ const ListaJoiasScreen = () => {
               <div key={joia.id} className={Styles.card}>
                 <div className={Styles.cardContentWrapper} onClick={() => navigate(`/detalhe-joias`, { state: { id: joia.id } })}>
                   {joia.foto ? (
-                    <img src={joia.foto} alt={joia.nome} className={Styles.cardImage} />
+                    <img loading='lazy' src={joia.foto} alt={joia.nome} className={Styles.cardImage} />
                   ) : (
                     <div className={Styles.noImage}>Sem imagem</div>
                   )}

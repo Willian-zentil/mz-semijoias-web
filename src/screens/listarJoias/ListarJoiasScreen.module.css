@@ -1,9 +1,7 @@
 .listContainer {
   min-height: 100vh;
   background-color: #f3f4f6;
-  /* Equivalente a bg-gray-100 */
   padding: 70px 10px 10px 10px;
-  /* Adiciona padding-top para evitar sobreposição com o Navbar */
 }
 
 .joiasList {
@@ -32,6 +30,7 @@
   flex: 1;
   cursor: pointer;
   align-items: center;
+  width: 80%;
 }
 
 .cardImage,
@@ -51,10 +50,6 @@
   color: #555;
 }
 
-.contentLucro {
-  margin-top: 40px;
-}
-
 .cardProfit {
   font-weight: bold;
   color: #28a745;
@@ -68,6 +63,8 @@
   flex: 1;
   display: flex;
   justify-content: space-around;
+  flex-direction: column;
+  width: 50%;
 }
 
 .cardContent div {
@@ -82,12 +79,14 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 5px;
+  max-width: 200px;
+  margin-right: 20px;
 }
 
 .cardPrice {
   font-size: 16px;
   color: #28a745;
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .cardQuantity {
@@ -97,8 +96,10 @@
 .cardActions {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   padding-right: 10px;
+  width: 20%;
+  margin-left: 20px;
 }
 
 .cardActions button {
@@ -260,6 +261,31 @@
   background-color: #5a6268;
 }
 
+.searchContainer {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #333;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.paginationInfo {
+  margin: 0 15px;
+}
+
 /* Ajustes para telas menores */
 @media (max-width: 480px) {
   .card {
@@ -267,24 +293,40 @@
     align-items: center;
   }
 
+  .listContainer {
+    padding: 20px;
+  }
+
   .cardImage {
-    width: 80px;
-    height: 80px;
+    width: 200px;
+    height: 200px;
+    margin-top: 20px;
   }
 
   .cardContent {
     padding: 5px;
     text-align: center;
+    width: 100%;
   }
 
   .cardActions {
     flex-direction: row;
     padding: 5px 0;
+    width: 100%;
   }
 
   .actionButton {
     padding: 5px;
     margin: 0 5px;
     font-size: 12px;
+  }
+
+  .cardTitle {
+    max-width: unset;
+    text-align: center;
+  }
+
+  .cardContentWrapper {
+    flex-direction: column;
   }
 }

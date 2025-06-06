@@ -166,97 +166,95 @@ const DetalheJoiaScreen = () => {
   return (
     <div className={Styles.container}>
       <div className={Styles.scrollContainer}>
-        <div className={Styles.contentContainer}>
-          <h1 className={Styles.title}>{joia.nome}</h1>
-          {fotoPreview && <img src={fotoPreview} alt={joia.nome} className={Styles.image} />}
-          <label className={Styles.label}>Nova Foto:</label>
-          <input
-            type="file"
-            accept="image/*"
-            className={Styles.input}
-            onChange={handleImageChange}
-          />
-          {formError && <p className={Styles.formError}>{formError}</p>}
-          <div className={Styles.rowContainer}>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Nome:</p>
-              <input
-                className={Styles.input}
-                type="text"
-                value={editValues.nome}
-                onChange={(e) => handleInputChange('nome', e.target.value)}
-              />
-            </div>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Referência:</p>
-              <input
-                className={Styles.input}
-                type="text"
-                value={editValues.referencia}
-                onChange={(e) => handleInputChange('referencia', e.target.value)}
-              />
-            </div>
+        <h1 className={Styles.title}>{joia.nome}</h1>
+        {fotoPreview && <img src={fotoPreview} alt={joia.nome} className={Styles.image} />}
+        <label className={Styles.label}>Nova Foto:</label>
+        <input
+          type="file"
+          accept="image/*"
+          className={Styles.input}
+          onChange={handleImageChange}
+        />
+        {formError && <p className={Styles.formError}>{formError}</p>}
+        <div className={Styles.rowContainer}>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Nome:</p>
+            <input
+              className={Styles.input}
+              type="text"
+              value={editValues.nome}
+              onChange={(e) => handleInputChange('nome', e.target.value)}
+            />
           </div>
-          <div className={Styles.rowContainer}>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Valor Atacado (R$):</p>
-              <input
-                className={Styles.input}
-                type="text"
-                placeholder="R$ 0,00"
-                value={editValues.valorAtacado}
-                onChange={(e) => handleInputChange('valorAtacado', e.target.value)}
-              />
-            </div>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Valor Revenda (R$):</p>
-              <input
-                className={Styles.input}
-                type="text"
-                placeholder="R$ 0,00"
-                value={editValues.valorRevenda}
-                onChange={(e) => handleInputChange('valorRevenda', e.target.value)}
-              />
-            </div>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Referência:</p>
+            <input
+              className={Styles.input}
+              type="text"
+              value={editValues.referencia}
+              onChange={(e) => handleInputChange('referencia', e.target.value)}
+            />
           </div>
-          <div className={Styles.rowContainer}>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Valor Bruto (R$):</p>
-              <input
-                className={Styles.input}
-                type="text"
-                placeholder="R$ 0,00"
-                value={editValues.valorBruto}
-                onChange={(e) => handleInputChange('valorBruto', e.target.value)}
-              />
-            </div>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Valor Banho (R$):</p>
-              <input
-                className={Styles.input}
-                type="text"
-                placeholder="R$ 0,00"
-                value={editValues.valorBanho}
-                onChange={(e) => handleInputChange('valorBanho', e.target.value)}
-              />
-            </div>
+        </div>
+        <div className={Styles.rowContainer}>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Valor Atacado (R$):</p>
+            <input
+              className={Styles.input}
+              type="text"
+              placeholder="R$ 0,00"
+              value={editValues.valorAtacado}
+              onChange={(e) => handleInputChange('valorAtacado', e.target.value)}
+            />
           </div>
-          <div className={Styles.rowContainer}>
-            <div className={Styles.column}>
-              <p className={Styles.label}>Quantidade:</p>
-              <input
-                className={Styles.input}
-                type="text"
-                placeholder="0"
-                value={editValues.quantidade}
-                onChange={(e) => handleInputChange('quantidade', e.target.value)}
-              />
-            </div>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Valor Revenda (R$):</p>
+            <input
+              className={Styles.input}
+              type="text"
+              placeholder="R$ 0,00"
+              value={editValues.valorRevenda}
+              onChange={(e) => handleInputChange('valorRevenda', e.target.value)}
+            />
           </div>
-          <div className={Styles.buttonContainer}>
-            <button className={Styles.saveButton} onClick={handleSalvar}>Salvar</button>
-            <button className={Styles.backButton} onClick={() => navigate('/lista-joias')}>Voltar</button>
+        </div>
+        <div className={Styles.rowContainer}>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Valor Bruto (R$):</p>
+            <input
+              className={Styles.input}
+              type="text"
+              placeholder="R$ 0,00"
+              value={editValues.valorBruto}
+              onChange={(e) => handleInputChange('valorBruto', e.target.value)}
+            />
           </div>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Valor Banho (R$):</p>
+            <input
+              className={Styles.input}
+              type="text"
+              placeholder="R$ 0,00"
+              value={editValues.valorBanho}
+              onChange={(e) => handleInputChange('valorBanho', e.target.value)}
+            />
+          </div>
+        </div>
+        <div className={Styles.rowContainer}>
+          <div className={Styles.column}>
+            <p className={Styles.label}>Quantidade:</p>
+            <input
+              className={Styles.input}
+              type="text"
+              placeholder="0"
+              value={editValues.quantidade}
+              onChange={(e) => handleInputChange('quantidade', e.target.value)}
+            />
+          </div>
+        </div>
+        <div className={Styles.buttonContainer}>
+          <button className={Styles.saveButton} onClick={handleSalvar}>Salvar</button>
+          <button className={Styles.backButton} onClick={() => navigate('/lista-joias')}>Voltar</button>
         </div>
       </div>
     </div>

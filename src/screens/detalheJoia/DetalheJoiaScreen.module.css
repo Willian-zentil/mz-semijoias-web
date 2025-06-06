@@ -1,9 +1,7 @@
 .container {
   min-height: 100vh;
   padding: 70px 20px 20px 20px;
-  /* Adiciona padding-top para evitar sobreposição com o Navbar */
   background-color: #f3f4f6;
-  /* Equivalente a bg-gray-100 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,14 +10,12 @@
 .scrollContainer {
   overflow-y: auto;
   max-height: calc(100vh - 60px);
-  /* Ajusta a altura considerando o Navbar */
 }
 
 .contentContainer {
   flex-grow: 1;
   padding: 20px;
   background-color: #f3f4f6;
-  /* Equivalente a bg-gray-100 */
 }
 
 .title {
@@ -167,6 +163,10 @@
     padding: 8px;
   }
 
+  .title {
+    margin: 0 0 10px 0;
+  }
+
   .saveButton {
     font-size: 14px;
     padding: 8px 15px;
@@ -177,16 +177,15 @@
     padding: 8px 15px;
   }
 
-  .image {
-    width: 150px;
-    height: 150px;
-  }
-
   .rowContainer {
     flex-direction: column;
   }
 
   .column {
     margin-bottom: 10px;
+  }
+
+  .container {
+    padding: 20px;
   }
 }

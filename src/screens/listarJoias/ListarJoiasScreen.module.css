@@ -9,6 +9,37 @@
   margin: 0 auto;
 }
 
+/* Adicione ou atualize no ListarJoiasScreen.module.css */
+.disabledSelect {
+  background-color: #e0e0e0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.disabledText {
+  color: #888;
+}
+
+.modalLabel {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Existentes, apenas para referência */
+.revendedoraValue {
+  font-size: 16px;
+  margin-top: 5px;
+}
+
 .card {
   display: flex;
   justify-content: space-between;
@@ -221,6 +252,12 @@
   max-width: 400px;
   border-radius: 10px;
   text-align: center;
+  max-height: 80%;
+  overflow: auto;
+}
+
+.modalContainer input {
+  text-align: center;
 }
 
 .modalTitle {
@@ -246,11 +283,7 @@
 }
 
 .confirmButton {
-  background-color: #dc3545;
-}
-
-.confirmButton:hover {
-  background-color: #c82333;
+  background-color: #218838;
 }
 
 .cancelButton {
@@ -284,6 +317,31 @@
 
 .paginationInfo {
   margin: 0 15px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.modalLabel {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.modalInput {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.modalInput:focus {
+  border-color: #333;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Ajustes para telas menores */

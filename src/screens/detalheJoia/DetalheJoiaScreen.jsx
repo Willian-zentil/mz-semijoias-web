@@ -78,6 +78,28 @@ const DetalheJoiaScreen = () => {
     }
   };
 
+
+  const calculateProfit = (joia) => {
+    const valorRevenda = joia.valorRevenda || 0;
+    const valorBanho = joia.valorBanho || 0;
+    const valorAtacado = joia.valorAtacado || 0;
+    const valorBruto = joia.valorBruto || 0;
+    const custo = valorBanho + valorAtacado + valorBruto;
+    const lucro = valorRevenda - custo;
+    return lucro;
+  };
+
+  const calculateProfitPercentage = (joia) => {
+    const valorBanho = joia.valorBanho || 0;
+    const valorAtacado = joia.valorAtacado || 0;
+    const valorBruto = joia.valorBruto || 0;
+    const custo = valorBanho + valorAtacado + valorBruto;
+    if (custo === 0) return 0; // Evita divisão por zero
+    const lucro = calculateProfit(joia);
+    const percentage = (lucro / custo) * 100;
+    return percentage.toFixed(2); // Arredonda para 2 casas decimais
+  };
+
   const uploadImage = async (file) => {
     if (!file) return joia.foto;
 
@@ -167,6 +189,10 @@ const DetalheJoiaScreen = () => {
     <div className={Styles.container}>
       <div className={Styles.scrollContainer}>
         <h1 className={Styles.title}>{joia.nome}</h1>
+        <div className={Styles.contentLucro}>
+          <p className={Styles.cardProfit}>Lucro: R${calculateProfit(joia).toFixed(2)}</p>
+          <p className={Styles.cardProfitPercentage}>Porcentagem %: {calculateProfitPercentage(joia)}%</p>
+        </div>
         {fotoPreview && <img src={fotoPreview} alt={joia.nome} className={Styles.image} />}
         <label className={Styles.label}>Nova Foto:</label>
         <input

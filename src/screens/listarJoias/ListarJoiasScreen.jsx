@@ -12,6 +12,11 @@ const ListaJoiasScreen = () => {
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [joiaToDelete, setJoiaToDelete] = useState(null);
+  const [modalCompraVisible, setModalCompraVisible] = useState(false);
+  const [joiaToBuy, setJoiaToBuy] = useState(null);
+  const [compraData, setCompraData] = useState({ quantidade: 1, valorVenda: '', nomeCliente: '' });
+  const [isRevendedora, setIsRevendedora] = useState(false);
+  const [revendedoraSelecionada, setRevendedoraSelecionada] = useState('');
   const navigate = useNavigate();
   const itemsPerPage = 15;
 
@@ -92,6 +97,102 @@ const ListaJoiasScreen = () => {
     setJoiaToDelete(null);
   };
 
+  const handleBuyClick = (joia) => {
+    setJoiaToBuy(joia);
+    setCompraData({ quantidade: 1, valorVenda: joia.valorRevenda?.toString() || '', nomeCliente: '' });
+    setIsRevendedora(false);
+    setRevendedoraSelecionada('');
+    setModalCompraVisible(true);
+  };
+
+  const handleCompraChange = (field, value) => {
+    setCompraData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleRevendedoraChange = (e) => {
+    setIsRevendedora(e.target.checked);
+    if (e.target.checked) {
+      const valorRevenda = parseFloat(joiaToBuy?.valorRevenda || '0');
+      const currentValorVenda = parseFloat(compraData.valorVenda || valorRevenda);
+      setCompraData((prev) => ({
+        ...prev,
+        valorVenda: currentValorVenda.toString(),
+      }));
+    }
+    // Não redefina valorVenda ao desmarcar, mantendo o valor atual
+  };
+
+  const handleRevendedoraSelect = (e) => {
+    setRevendedoraSelecionada(e.target.value);
+  };
+
+  const calculateRevendedoraValue = () => {
+    const valorVenda = parseFloat(compraData.valorVenda || joiaToBuy?.valorRevenda || '0');
+    return (valorVenda * 0.3).toFixed(2);
+  };
+
+  const handleConfirmCompra = async () => {
+    if (!joiaToBuy || !compraData.quantidade || !compraData.valorVenda || !compraData.nomeCliente) {
+      alert('Todos os campos são obrigatórios.');
+      return;
+    }
+
+    if (isRevendedora && !revendedoraSelecionada) {
+      alert('Selecione uma revendedora.');
+      return;
+    }
+
+    const quantidade = parseInt(compraData.quantidade, 10);
+    const valorVenda = parseFloat(compraData.valorVenda);
+    if (quantidade <= 0 || valorVenda < 0 || quantidade > joiaToBuy.quantidade) {
+      alert('Quantidade inválida ou maior que o estoque disponível.');
+      return;
+    }
+
+    try {
+      // Registrar a venda
+      const { error: vendaError } = await supabase.from('vendas').insert({
+        joia_id: joiaToBuy.id,
+        quantidade,
+        valor_venda: valorVenda,
+        nome_cliente: compraData.nomeCliente.trim(),
+        revendedora: isRevendedora ? revendedoraSelecionada : null,
+      });
+      if (vendaError) throw new Error(vendaError.message);
+
+      // Atualizar a quantidade da joia
+      const novaQuantidade = joiaToBuy.quantidade - quantidade;
+      const { error: updateError } = await supabase
+        .from('joias')
+        .update({ quantidade: novaQuantidade })
+        .eq('id', joiaToBuy.id);
+      if (updateError) throw new Error(updateError.message);
+
+      // Atualizar estado local
+      const updatedJoias = joias.map((joia) =>
+        joia.id === joiaToBuy.id ? { ...joia, quantidade: novaQuantidade } : joia
+      );
+      setJoias(updatedJoias);
+      setFilteredJoias(updatedJoias);
+      setModalCompraVisible(false);
+      setJoiaToBuy(null);
+      setCompraData({ quantidade: 1, valorVenda: '', nomeCliente: '' });
+      setIsRevendedora(false);
+      setRevendedoraSelecionada('');
+      alert('Compra registrada com sucesso!');
+    } catch (error) {
+      setError(`Erro ao registrar compra: ${error.message}`);
+    }
+  };
+
+  const handleCancelCompra = () => {
+    setModalCompraVisible(false);
+    setJoiaToBuy(null);
+    setCompraData({ quantidade: 1, valorVenda: '', nomeCliente: '' });
+    setIsRevendedora(false);
+    setRevendedoraSelecionada('');
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentJoias = filteredJoias.slice(indexOfFirstItem, indexOfLastItem);
@@ -159,7 +260,7 @@ const ListaJoiasScreen = () => {
                   </div>
                 </div>
                 <div className={Styles.cardActions}>
-                  <button className={Styles.buyButton}>Comprar</button>
+                  <button className={Styles.buyButton} onClick={() => handleBuyClick(joia)}>Venda</button>
                   <button className={Styles.deleteButton} onClick={() => handleDeleteClick(joia)}>Excluir</button>
                 </div>
               </div>
@@ -195,6 +296,68 @@ const ListaJoiasScreen = () => {
             <div className={Styles.modalButtons}>
               <button className={`${Styles.modalButton} ${Styles.confirmButton}`} onClick={handleConfirmDelete}>Sim</button>
               <button className={`${Styles.modalButton} ${Styles.cancelButton}`} onClick={handleCancelDelete}>Não</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {modalCompraVisible && joiaToBuy && (
+        <div className={Styles.modalOverlay}>
+          <div className={Styles.modalContainer}>
+            <h2 className={Styles.modalTitle}>Registrar Compra</h2>
+            <p>Joia: {joiaToBuy.nome}</p>
+            <div className={Styles.modalContent}>
+              <label className={Styles.modalLabel}>*Quantidade:</label>
+              <input
+                type="number"
+                className={Styles.modalInput}
+                value={compraData.quantidade}
+                onChange={(e) => handleCompraChange('quantidade', e.target.value)}
+                min="1"
+                max={joiaToBuy.quantidade}
+              />
+              <label className={Styles.modalLabel}>*Valor de Venda (R$):</label>
+              <input
+                type="number"
+                step="0.01"
+                className={Styles.modalInput}
+                value={compraData.valorVenda}
+                onChange={(e) => handleCompraChange('valorVenda', e.target.value)}
+                disabled={isRevendedora}
+              />
+              <label className={Styles.modalLabel}>
+                <input
+                  type="checkbox"
+                  checked={isRevendedora}
+                  onChange={handleRevendedoraChange}
+                /> Venda por Revendedora
+              </label>
+              <select
+                className={`${Styles.modalInput} ${!isRevendedora ? Styles.disabledSelect : ''}`}
+                value={revendedoraSelecionada}
+                onChange={handleRevendedoraSelect}
+                disabled={!isRevendedora}
+              >
+                <option value="">Revendedora</option>
+                <option value="Marlene">Marlene</option>
+                <option value="Lucia">Lucia</option>
+                <option value="Thais">Thais</option>
+              </select>
+              <p className={`${Styles.revendedoraValue} ${!isRevendedora ? Styles.disabledText : ''}`}>
+                Valor da Revendedora: R${isRevendedora ? calculateRevendedoraValue() : '0.00'}
+              </p>
+
+              <label className={Styles.modalLabel}>*Nome do Cliente:</label>
+              <input
+                type="text"
+                className={Styles.modalInput}
+                value={compraData.nomeCliente}
+                onChange={(e) => handleCompraChange('nomeCliente', e.target.value)}
+              />
+            </div>
+            <div className={Styles.modalButtons}>
+              <button className={`${Styles.modalButton} ${Styles.confirmButton}`} onClick={handleConfirmCompra}>Confirmar</button>
+              <button className={`${Styles.modalButton} ${Styles.cancelButton}`} onClick={handleCancelCompra}>Cancelar</button>
             </div>
           </div>
         </div>

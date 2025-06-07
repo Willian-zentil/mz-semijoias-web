@@ -188,112 +188,114 @@ const CadastroJoiasScreen = () => {
   };
 
   return (
-    <div className={Styles.cadastroContainer}>
-      <h1 className={Styles.cadastroHeader}>Cadastro de Joias</h1>
+    <div className={Styles.cadastro}>
+      <div className={Styles.container}>
+        <h1 className={Styles.cadastroHeader}>Cadastro de Joias</h1>
 
-      <label className={Styles.cadastroLabel}>Nome *</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        placeholder="Digite o nome da joia"
-      />
+        <label className={Styles.cadastroLabel}>Nome *</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          placeholder="Digite o nome da joia"
+        />
 
-      <label className={Styles.cadastroLabel}>Foto</label>
-      <input
-        type="file"
-        accept="image/*"
-        className={Styles.cadastroUploadButton}
-        onChange={handleImageChange}
-      />
-      {fotoPreview && <img src={fotoPreview} alt="Prévia da imagem" className={Styles.cadastroImagePreview} />}
+        <label className={Styles.cadastroLabel}>Foto</label>
+        <input
+          type="file"
+          accept="image/*"
+          className={Styles.cadastroUploadButton}
+          onChange={handleImageChange}
+        />
+        {fotoPreview && <img src={fotoPreview} alt="Prévia da imagem" className={Styles.cadastroImagePreview} />}
 
-      <label className={Styles.cadastroLabel}>Referência *</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={referencia}
-        onChange={(e) => setReferencia(e.target.value)}
-        placeholder="Digite a referência"
-      />
+        <label className={Styles.cadastroLabel}>Referência *</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={referencia}
+          onChange={(e) => setReferencia(e.target.value)}
+          placeholder="Digite a referência"
+        />
 
-      <label className={Styles.cadastroLabel}>Valor Atacado</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={valorAtacado}
-        onChange={(e) => {
-          const numericValue = e.target.value.replace(/[^0-9]/g, '');
-          setValorAtacado(formatCurrency(numericValue));
-        }}
-        placeholder="Digite o valor atacado (opcional)"
-      />
+        <label className={Styles.cadastroLabel}>Valor Atacado</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={valorAtacado}
+          onChange={(e) => {
+            const numericValue = e.target.value.replace(/[^0-9]/g, '');
+            setValorAtacado(formatCurrency(numericValue));
+          }}
+          placeholder="Digite o valor atacado (opcional)"
+        />
 
-      <label className={Styles.cadastroLabel}>Valor Bruto</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={valorBruto}
-        onChange={(e) => {
-          const numericValue = e.target.value.replace(/[^0-9]/g, '');
-          setValorBruto(formatCurrency(numericValue));
-        }}
-        placeholder="Digite o valor bruto (opcional)"
-      />
+        <label className={Styles.cadastroLabel}>Valor Bruto</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={valorBruto}
+          onChange={(e) => {
+            const numericValue = e.target.value.replace(/[^0-9]/g, '');
+            setValorBruto(formatCurrency(numericValue));
+          }}
+          placeholder="Digite o valor bruto (opcional)"
+        />
 
-      <label className={Styles.cadastroLabel}>Valor Banho</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={valorBanho}
-        onChange={(e) => {
-          const numericValue = e.target.value.replace(/[^0-9]/g, '');
-          setValorBanho(formatCurrency(numericValue));
-        }}
-        placeholder="Digite o valor do banho (opcional)"
-      />
+        <label className={Styles.cadastroLabel}>Valor Banho</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={valorBanho}
+          onChange={(e) => {
+            const numericValue = e.target.value.replace(/[^0-9]/g, '');
+            setValorBanho(formatCurrency(numericValue));
+          }}
+          placeholder="Digite o valor do banho (opcional)"
+        />
 
-      <label className={Styles.cadastroLabel}>Quantidade *</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={quantidade}
-        onChange={(e) => setQuantidade(formatQuantity(e.target.value))}
-        placeholder="Digite a quantidade"
-      />
+        <label className={Styles.cadastroLabel}>Quantidade *</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={quantidade}
+          onChange={(e) => setQuantidade(formatQuantity(e.target.value))}
+          placeholder="Digite a quantidade"
+        />
 
-      <label className={Styles.cadastroLabel}>Valor Revenda *</label>
-      <input
-        className={Styles.cadastroInput}
-        type="text"
-        value={valorRevenda}
-        onChange={(e) => {
-          const numericValue = e.target.value.replace(/[^0-9]/g, '');
-          setValorRevenda(formatCurrency(numericValue));
-        }}
-        placeholder="Digite o valor de revenda"
-      />
+        <label className={Styles.cadastroLabel}>Valor Revenda *</label>
+        <input
+          className={Styles.cadastroInput}
+          type="text"
+          value={valorRevenda}
+          onChange={(e) => {
+            const numericValue = e.target.value.replace(/[^0-9]/g, '');
+            setValorRevenda(formatCurrency(numericValue));
+          }}
+          placeholder="Digite o valor de revenda"
+        />
 
-      <button
-        className={Styles.cadastroSubmitButton}
-        onClick={handleSubmit}
-        disabled={isLoading}
-      >
-        {isLoading ? 'Cadastrando...' : 'CADASTRAR'}
-      </button>
+        <button
+          className={Styles.cadastroSubmitButton}
+          onClick={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Cadastrando...' : 'CADASTRAR'}
+        </button>
 
-      {modalVisible && (
-        <div className={Styles.modalOverlay}>
-          <div className={Styles.modalContainer}>
-            <h2 className={Styles.modalTitle}>{modalTitle}</h2>
-            <p className={Styles.modalMessage}>{modalMessage}</p>
-            <button className={Styles.modalButton} onClick={hideModal}>
-              OK
-            </button>
+        {modalVisible && (
+          <div className={Styles.modalOverlay}>
+            <div className={Styles.modalContainer}>
+              <h2 className={Styles.modalTitle}>{modalTitle}</h2>
+              <p className={Styles.modalMessage}>{modalMessage}</p>
+              <button className={Styles.modalButton} onClick={hideModal}>
+                OK
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

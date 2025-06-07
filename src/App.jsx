@@ -7,6 +7,8 @@ import CadastroJoiasScreen from './screens/cadastro/CadastroJoiasScreen.jsx';
 import ListaJoiasScreen from './screens/listarJoias/ListarJoiasScreen.jsx';
 import DetalheJoiaScreen from './screens/detalheJoia/DetalheJoiaScreen.jsx';
 import Navbar from './components/navbar/Navbar.jsx';
+import CatalogoScreen from './screens/catalogo/catalogoScreen.jsx';
+import RelatoriosScreen from './screens/relatorios/RelatoriosScreen.jsx';
 
 const AppLayout = ({ session }) => (
   <>
@@ -58,8 +60,8 @@ function App() {
               <Route path="/cadastro-joias" element={<CadastroJoiasScreen />} />
               <Route path="/lista-joias" element={<ListaJoiasScreen />} />
               <Route path="/detalhe-joias" element={<DetalheJoiaScreen />} />
-              <Route path="/catalogos" element={<div className="p-6"><p className="text-lg">Catálogos</p></div>} />
-              <Route path="/relatorios" element={<div className="p-6"><p className="text-lg">Relatórios</p></div>} />
+              <Route path="/catalogos" element={<CatalogoScreen/>} />
+              <Route path="/relatorios" element={<RelatoriosScreen/>} />
               <Route path="/relatorios-revendedoras" element={<div className="p-6"><p className="text-lg">Relatórios de Revendedoras</p></div>} />
             </>
           )}

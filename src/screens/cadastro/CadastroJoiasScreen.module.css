@@ -1,6 +1,9 @@
-.cadastroContainer {
-  padding: 70px 20px 20px 20px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
-  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+.cadastro {
+  background-color: #f3f4f6;
+}
+
+.container {
+  padding: 70px 20px 20px 20px;
   min-height: 100vh;
   max-width: 600px;
   margin: 0 auto;

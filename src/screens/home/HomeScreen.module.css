@@ -1,9 +1,16 @@
+.home {
+  background-color: #f3f4f6;
+}
+
 .homeContainer {
-  padding: 70px 10px 10px 10px; /* Adiciona padding-top para evitar sobreposição com o Navbar */
-  min-height: 100vh;
-  background-color: #f3f4f6; /* Equivalente a bg-gray-100 */
+  padding: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nome {
+  text-transform: uppercase;
 }
 
 .cardList {
@@ -13,6 +20,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 20px;
+  padding-top: 20px;
   padding-bottom: 20px;
   max-width: 600px;
   width: 100%;
@@ -32,7 +40,8 @@
   border: none;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-decoration: none; /* Remove o sublinhado padrão do <a> */
+  text-decoration: none;
+  /* Remove o sublinhado padrão do <a> */
 }
 
 .card:hover {
@@ -58,7 +67,8 @@
 /* Ajustes para telas menores */
 @media (max-width: 480px) {
   .cardList {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Cards menores em telas pequenas */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    /* Cards menores em telas pequenas */
     gap: 8px;
   }
 

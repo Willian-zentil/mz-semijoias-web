@@ -1,152 +1,4 @@
-.relatorios {
-  padding: 20px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.reportSection {
-  margin-bottom: 40px;
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 5px;
-}
-
-.sectionTitle {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.dateFilter {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.dateInput {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.exportButton {
-  padding: 8px 16px;
-  background-color: #27ae60;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.exportButton:hover {
-  background-color: #219653;
-}
-
-.summary {
-  margin-bottom: 15px;
-  font-size: 16px;
-  display: flex;
-  justify-content: start;
-}
-
-.reportList {
-  list-style: none;
-  padding: 0;
-}
-
-.reportItem {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.reportItem span {
-  flex: 1;
-  min-width: 200px;
-}
-
-.noData {
-  color: #666;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
-
-.errorText {
-  color: #e74c3c;
-}
-
-.retryButton {
-  padding: 8px 16px;
-  background-color: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Adicione ou atualize no RelatoriosScreen.module.css */
-.reportTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.reportTable th,
-.reportTable td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.reportTable th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-.summary {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.totalVendas {
-  background-color: green;
-  font-size: 24px;
-  font-weight: bold;
-  color: #fff;
-  margin: 25px 50px 25px 0;
-  padding: 30px;
-  border-radius: 10px;
-}
-
-.totalCusto {
-  background-color: red;
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-  padding: 30px;
-  border-radius: 10px;
-  margin: 25px 50px 25px 0;
-}
-
-/* Estilos existentes, apenas para referência */
+/* Estilos existentes */
 .relatorios {
   padding: 20px;
 }
@@ -159,6 +11,13 @@
 .title {
   font-size: 28px;
   margin-bottom: 20px;
+}
+
+.reportSection {
+  margin-bottom: 40px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
 }
 
 .sectionTitle {
@@ -232,21 +91,261 @@
   margin: 0 auto;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+/* Tabela de relatório */
+.reportTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  overflow-x: auto; /* Adiciona rolagem horizontal em telas pequenas */
+  display: block; /* Garante que a tabela seja tratada como bloco */
+}
+
+.reportTable th,
+.reportTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap; /* Impede que o texto quebre */
+}
+
+.reportTable th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.reportTable td:last-child {
+  text-align: center;
+}
+
+.editButton {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.editButton:hover {
+  background-color: #0056b3;
+}
+
+.deleteButton {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalTitle {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalLabel {
+  font-weight: bold;
+}
+
+.modalInput {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirmButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.confirmButton:hover {
+  background-color: #218838;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+/* Resumo */
+.summary {
+  text-align: center;
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.totalVendas {
+  background-color: rgb(36, 0, 243);
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 200px;
+}
+
+.totalCusto {
+  background-color: red;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 200px;
+}
+
+.lucroTotal {
+  background-color: green;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 200px;
+}
+
+/* Media Query para mobile (telas até 992px) */
+@media (max-width: 992px) {
+  .relatorios {
+    padding: 10px;
   }
 
-  100% {
-    transform: rotate(360deg);
+  .container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+  }
+
+  .dateFilter {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dateInput,
+  .exportButton {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .reportTable {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em iOS */
+  }
+
+  .reportTable th,
+  .reportTable td {
+    font-size: 14px;
+    padding: 6px;
+    white-space: normal; /* Permite quebra de texto em telas pequenas */
+  }
+
+  .reportTable th {
+    background-color: #f4f4f4;
+  }
+
+  .summary {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .totalVendas,
+  .totalCusto,
+  .lucroTotal {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 18px;
+    min-width: 100%;
+    text-align: center;
+  }
+
+  .modalContainer {
+    width: 90%;
+    max-height: 90vh;
+  }
+
+  .modalTitle {
+    font-size: 18px;
+  }
+
+  .modalInput {
+    font-size: 14px;
+  }
+
+  .modalButton {
+    font-size: 14px;
+    padding: 6px 12px;
   }
 }
 
+/* Animação de spin */
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }

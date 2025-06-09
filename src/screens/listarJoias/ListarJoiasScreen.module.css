@@ -315,6 +315,11 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
 .paginationInfo {
   margin: 0 15px;
 }

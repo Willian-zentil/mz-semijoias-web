@@ -49,7 +49,7 @@ const Navbar = () => {
             <button onClick={() => handleNavigate('/relatorios')}>Relatórios</button>
           </li>
           <li className={Styles.navbarItem}>
-            <button onClick={() => handleNavigate('/relatorios-revendedoras')}>Relatórios de Revendedoras</button>
+            <button onClick={() => handleNavigate('/perfils')}>Revendedoras</button>
           </li>
           <li className={Styles.navbarItem}>
             <button onClick={handleLogout}>Sair</button>

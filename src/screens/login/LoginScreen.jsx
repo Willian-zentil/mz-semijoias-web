@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../superbase/supabaseConfig';
+import { AuthContext } from '../../context/AuthContext'; // Importe o contexto
 import './LoginScreen.css';
 
 export default function LoginScreen() {
@@ -8,11 +9,12 @@ export default function LoginScreen() {
   const [senha, setSenha] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); // Use o contexto para atualizar o usuário
 
   const handleLogin = async () => {
     setErrorMessage('');
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password: senha,
     });
@@ -23,24 +25,12 @@ export default function LoginScreen() {
       return;
     }
 
+    setUser(data.session?.user); // Atualiza o estado global do usuário
     navigate('/');
   };
 
-  const handleSignUp = async () => {
-    setErrorMessage('');
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password: senha,
-    });
-
-    if (error) {
-      setErrorMessage(error.message);
-      console.error('Erro ao criar conta:', error.message);
-      return;
-    }
-
-    setErrorMessage('Conta criada com sucesso! Faça login para continuar.');
+  const handleCadastrar = () => {
+    navigate('/criar-conta');
   };
 
   return (
@@ -66,13 +56,13 @@ export default function LoginScreen() {
         placeholder="Digite sua senha"
       />
 
-      {errorMessage ? <p className="login-error">{errorMessage}</p> : null}
+      {errorMessage && <p className="login-error">{errorMessage}</p>}
 
       <button className="login-button" onClick={handleLogin}>
         Entrar
       </button>
 
-      <button className="login-button" onClick={handleSignUp}>
+      <button className="login-button" onClick={handleCadastrar}>
         Criar Conta
       </button>
     </div>

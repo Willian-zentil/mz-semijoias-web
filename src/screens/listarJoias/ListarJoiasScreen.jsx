@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../superbase/supabaseConfig';
 import Styles from './ListarJoiasScreen.module.css';
@@ -17,20 +17,70 @@ const ListaJoiasScreen = () => {
   const [compraData, setCompraData] = useState({ quantidade: 1, valorVenda: '', nomeCliente: '' });
   const [isRevendedora, setIsRevendedora] = useState(false);
   const [revendedoraSelecionada, setRevendedoraSelecionada] = useState('');
+  const [revendedoraValue, setRevendedoraValue] = useState('0.00');
+  const [revendedoras, setRevendedoras] = useState([]);
   const navigate = useNavigate();
   const itemsPerPage = 15;
 
   useEffect(() => {
-    const fetchJoias = async () => {
-      const { data, error } = await supabase.from('joias').select('*');
-      if (error) setError(error.message);
-      else {
+    const syncAdminUserId = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: adminData, error: adminError } = await supabase
+          .from('administradores')
+          .select('id, user_id')
+          .eq('email', user.email)
+          .single();
+
+        if (adminData && !adminData.user_id) {
+          console.log('Sincronizando user_id para:', user.id);
+          const { error: updateError } = await supabase
+            .from('administradores')
+            .update({ user_id: user.id })
+            .eq('id', adminData.id);
+          if (updateError) {
+            console.error('Erro ao sincronizar user_id:', updateError.message);
+          }
+        }
+      }
+    };
+
+    const fetchData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError('Usuário não autenticado.');
+        setLoading(false);
+        return;
+      }
+
+      // Sincronizar user_id antes de carregar dados
+      await syncAdminUserId();
+
+      const { data: adminCheck } = await supabase
+        .from('administradores')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .single();
+
+      const { data, error: fetchError } = adminCheck
+        ? await supabase.from('joias').select('*') // Admin vê todas as joias
+        : await supabase.from('joias').select('*').eq('user_id', user.id);
+
+      if (fetchError) {
+        setError(`Erro ao carregar joias: ${fetchError.message}`);
+      } else {
         setJoias(data || []);
         setFilteredJoias(data || []);
       }
       setLoading(false);
+
+      const { data: revData, error: revError } = await supabase
+        .from('revendedoras')
+        .select('nome');
+      if (revError) setError(revError.message);
+      else setRevendedoras(revData || []);
     };
-    fetchJoias();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -39,12 +89,20 @@ const ListaJoiasScreen = () => {
       (joia.referencia?.toLowerCase() || '').includes(searchTerm.toLowerCase())
     );
     setFilteredJoias(filtered);
-    setCurrentPage(1); // Reseta para a primeira página ao buscar
+    setCurrentPage(1);
   }, [searchTerm, joias]);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  useEffect(() => {
+    const updateRevendedoraValue = async () => {
+      const value = await calculateRevendedoraValue();
+      setRevendedoraValue(value);
+    };
+    if (isRevendedora && joiaToBuy && modalCompraVisible) {
+      updateRevendedoraValue();
+    } else {
+      setRevendedoraValue('0.00');
+    }
+  }, [isRevendedora, revendedoraSelecionada, joiaToBuy, modalCompraVisible, compraData.valorVenda]);
 
   const calculateProfit = (joia) => {
     const valorRevenda = joia.valorRevenda || 0;
@@ -61,10 +119,14 @@ const ListaJoiasScreen = () => {
     const valorAtacado = joia.valorAtacado || 0;
     const valorBruto = joia.valorBruto || 0;
     const custo = valorBanho + valorAtacado + valorBruto;
-    if (custo === 0) return 0; // Evita divisão por zero
+    if (custo === 0) return 0;
     const lucro = calculateProfit(joia);
     const percentage = (lucro / custo) * 100;
-    return percentage.toFixed(2); // Arredonda para 2 casas decimais
+    return percentage.toFixed(2);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const handleDeleteClick = (joia) => {
@@ -82,7 +144,7 @@ const ListaJoiasScreen = () => {
       const updatedJoias = joias.filter((joia) => joia.id !== joiaToDelete.id);
       setJoias(updatedJoias);
       setFilteredJoias(updatedJoias);
-      setCurrentPage(1); // Reseta para a primeira página após exclusão
+      setCurrentPage(1);
       setModalVisible(false);
       setJoiaToDelete(null);
     } catch (error) {
@@ -110,30 +172,41 @@ const ListaJoiasScreen = () => {
   };
 
   const handleRevendedoraChange = (e) => {
-    setIsRevendedora(e.target.checked);
-    if (e.target.checked) {
+    const checked = e.target.checked;
+    setIsRevendedora(checked);
+    if (checked && !compraData.valorVenda) {
       const valorRevenda = parseFloat(joiaToBuy?.valorRevenda || '0');
-      const currentValorVenda = parseFloat(compraData.valorVenda || valorRevenda);
       setCompraData((prev) => ({
         ...prev,
-        valorVenda: currentValorVenda.toString(),
+        valorVenda: valorRevenda.toString(),
       }));
     }
-    // Não redefina valorVenda ao desmarcar, mantendo o valor atual
   };
 
   const handleRevendedoraSelect = (e) => {
     setRevendedoraSelecionada(e.target.value);
   };
 
-  const calculateRevendedoraValue = () => {
+  const calculateRevendedoraValue = async () => {
     const valorVenda = parseFloat(compraData.valorVenda || joiaToBuy?.valorRevenda || '0');
-    return (valorVenda * 0.3).toFixed(2);
+    let revendedoraComissao = 0;
+    if (isRevendedora && revendedoraSelecionada) {
+      const { data, error } = await supabase
+        .from('revendedoras')
+        .select('taxa_de_comissao')
+        .eq('nome', revendedoraSelecionada)
+        .single();
+      if (!error && data) {
+        revendedoraComissao = data.taxa_de_comissao / 100;
+      }
+    }
+    const baseValue = valorVenda * 0.3; // 30% base
+    return baseValue.toFixed(2);
   };
 
   const handleConfirmCompra = async () => {
     if (!joiaToBuy || !compraData.quantidade || !compraData.valorVenda || !compraData.nomeCliente) {
-      alert('Todos os campos são obrigatórios.');
+      alert('Preencha os campos obrigatórios.');
       return;
     }
 
@@ -149,18 +222,36 @@ const ListaJoiasScreen = () => {
       return;
     }
 
+    let revendedoraId = null;
+    let valorComissao = 0;
+    if (isRevendedora) {
+      const { data: revendedoraData, error: revendedoraError } = await supabase
+        .from('revendedoras')
+        .select('id')
+        .eq('nome', revendedoraSelecionada)
+        .single();
+      if (revendedoraError || !revendedoraData) {
+        alert('Revendedora não encontrada.');
+        return;
+      }
+      revendedoraId = revendedoraData.id;
+      valorComissao = valorVenda * 0.3; // 30% de comissão
+    }
+
     try {
-      // Registrar a venda
       const { error: vendaError } = await supabase.from('vendas').insert({
         joia_id: joiaToBuy.id,
         quantidade,
         valor_venda: valorVenda,
         nome_cliente: compraData.nomeCliente.trim(),
-        revendedora: isRevendedora ? revendedoraSelecionada : null,
+        data_venda: new Date().toISOString(),
+        revendedora_id: revendedoraId,
+        valor_comissao: valorComissao,
+        nome_joia: joiaToBuy.nome,
+        referencia_joia: joiaToBuy.referencia,
       });
       if (vendaError) throw new Error(vendaError.message);
 
-      // Atualizar a quantidade da joia
       const novaQuantidade = joiaToBuy.quantidade - quantidade;
       const { error: updateError } = await supabase
         .from('joias')
@@ -168,7 +259,6 @@ const ListaJoiasScreen = () => {
         .eq('id', joiaToBuy.id);
       if (updateError) throw new Error(updateError.message);
 
-      // Atualizar estado local
       const updatedJoias = joias.map((joia) =>
         joia.id === joiaToBuy.id ? { ...joia, quantidade: novaQuantidade } : joia
       );
@@ -235,33 +325,48 @@ const ListaJoiasScreen = () => {
         />
       </div>
       {filteredJoias.length === 0 ? (
-        <p className={Styles.emptyText}>{searchTerm ? 'Nenhuma joia encontrada com esse termo.' : 'Nenhuma joia encontrada.'}</p>
+        <p className={Styles.emptyText}>
+          {searchTerm ? 'Nenhuma joia encontrada com esse termo.' : 'Nenhuma joia encontrada.'}
+        </p>
       ) : (
         <>
           <div className={Styles.joiasList}>
             {currentJoias.map((joia) => (
               <div key={joia.id} className={Styles.card}>
-                <div className={Styles.cardContentWrapper} onClick={() => navigate(`/detalhe-joias`, { state: { id: joia.id } })}>
+                <div
+                  className={Styles.cardContentWrapper}
+                  onClick={() => navigate(`/detalhe-joias`, { state: { id: joia.id } })}
+                >
                   {joia.foto ? (
-                    <img loading='lazy' src={joia.foto} alt={joia.nome} className={Styles.cardImage} />
+                    <img loading="lazy" src={joia.foto} alt={joia.nome} className={Styles.cardImage} />
                   ) : (
                     <div className={Styles.noImage}>Sem imagem</div>
                   )}
                   <p className={Styles.cardTitle}>{joia.nome}</p>
                   <div className={Styles.cardContent}>
                     <div>
-                      <p className={Styles.cardPrice}>Revenda R${joia.valorRevenda?.toFixed(2)}</p>
-                      <p className={Styles.cardQuantity}>Quantidade: {joia.quantidade}</p>
+                      <p className={Styles.cardPrice}>
+                        Revenda R${joia.valorRevenda?.toFixed(2) || '0.00'}
+                      </p>
+                      <p className={Styles.cardQuantity}>Quantidade: {joia.quantidade || 0}</p>
                     </div>
                     <div className={Styles.contentLucro}>
-                      <p className={Styles.cardProfit}>Lucro: R${calculateProfit(joia).toFixed(2)}</p>
-                      <p className={Styles.cardProfitPercentage}>Porcentagem %: {calculateProfitPercentage(joia)}%</p>
+                      <p className={Styles.cardProfit}>
+                        Lucro: R${calculateProfit(joia).toFixed(2)}
+                      </p>
+                      <p className={Styles.cardProfitPercentage}>
+                        Porcentagem %: {calculateProfitPercentage(joia)}%
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className={Styles.cardActions}>
-                  <button className={Styles.buyButton} onClick={() => handleBuyClick(joia)}>Venda</button>
-                  <button className={Styles.deleteButton} onClick={() => handleDeleteClick(joia)}>Excluir</button>
+                  <button className={Styles.buyButton} onClick={() => handleBuyClick(joia)}>
+                    Venda
+                  </button>
+                  <button className={Styles.deleteButton} onClick={() => handleDeleteClick(joia)}>
+                    Excluir
+                  </button>
                 </div>
               </div>
             ))}
@@ -294,8 +399,18 @@ const ListaJoiasScreen = () => {
             <h2 className={Styles.modalTitle}>Confirmar Exclusão</h2>
             <p>Deseja realmente excluir a joia "{joiaToDelete?.nome}"?</p>
             <div className={Styles.modalButtons}>
-              <button className={`${Styles.modalButton} ${Styles.confirmButton}`} onClick={handleConfirmDelete}>Sim</button>
-              <button className={`${Styles.modalButton} ${Styles.cancelButton}`} onClick={handleCancelDelete}>Não</button>
+              <button
+                className={`${Styles.modalButton} ${Styles.confirmButton}`}
+                onClick={handleConfirmDelete}
+              >
+                Sim
+              </button>
+              <button
+                className={`${Styles.modalButton} ${Styles.cancelButton}`}
+                onClick={handleCancelDelete}
+              >
+                Não
+              </button>
             </div>
           </div>
         </div>
@@ -338,15 +453,20 @@ const ListaJoiasScreen = () => {
                 onChange={handleRevendedoraSelect}
                 disabled={!isRevendedora}
               >
-                <option value="">Revendedora</option>
-                <option value="Marlene">Marlene</option>
-                <option value="Lucia">Lucia</option>
-                <option value="Thais">Thais</option>
+                <option value="">Selecione uma revendedora</option>
+                {revendedoras.map((rev) => (
+                  <option key={rev.nome} value={rev.nome}>
+                    {rev.nome}
+                  </option>
+                ))}
               </select>
-              <p className={`${Styles.revendedoraValue} ${!isRevendedora ? Styles.disabledText : ''}`}>
-                Valor da Revendedora: R${isRevendedora ? calculateRevendedoraValue() : '0.00'}
+              <p
+                className={`${Styles.revendedoraValue} ${
+                  !isRevendedora ? Styles.disabledText : ''
+                }`}
+              >
+                Valor da Revendedora: R${revendedoraValue}
               </p>
-
               <label className={Styles.modalLabel}>*Nome do Cliente:</label>
               <input
                 type="text"
@@ -356,8 +476,18 @@ const ListaJoiasScreen = () => {
               />
             </div>
             <div className={Styles.modalButtons}>
-              <button className={`${Styles.modalButton} ${Styles.confirmButton}`} onClick={handleConfirmCompra}>Confirmar</button>
-              <button className={`${Styles.modalButton} ${Styles.cancelButton}`} onClick={handleCancelCompra}>Cancelar</button>
+              <button
+                className={`${Styles.modalButton} ${Styles.confirmButton}`}
+                onClick={handleConfirmCompra}
+              >
+                Confirmar
+              </button>
+              <button
+                className={`${Styles.modalButton} ${Styles.cancelButton}`}
+                onClick={handleCancelCompra}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>

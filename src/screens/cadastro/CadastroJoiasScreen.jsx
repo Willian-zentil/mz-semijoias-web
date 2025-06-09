@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import Styles from './CadastroJoiasScreen.module.css';
 
 const CadastroJoiasScreen = () => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import Styles from './DetalheJoiaScreen.module.css';
 
 const DetalheJoiaScreen = () => {

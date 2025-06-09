@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import Styles from './CriarContaScreen.module.css';
 
 function CriarContaScreen() {

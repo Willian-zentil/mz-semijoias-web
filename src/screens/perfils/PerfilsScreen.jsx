@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import { AuthContext } from '../../context/AuthContext';
 import Styles from './PerfilsScreen.module.css';
 

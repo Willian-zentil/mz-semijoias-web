@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../superbase/supabaseConfig';
-import { AuthContext } from '../../context/AuthContext'; // Importe o contexto
+import { supabase } from '../../superbase/supabaseConfig.js';
+import { AuthContext } from '../../context/AuthContext.jsx'; // Importe o contexto
 import './LoginScreen.css';
 
 export default function LoginScreen() {

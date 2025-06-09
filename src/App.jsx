@@ -1,17 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { supabase } from './superbase/supabaseConfig';
-import { AuthContext } from './context/AuthContext'; // Importe o contexto
-import LoginScreen from './screens/login/LoginScreen';
-import HomeScreen from './screens/home/HomeScreen';
-import CadastroJoiasScreen from './screens/cadastro/CadastroJoiasScreen';
-import ListaJoiasScreen from './screens/listarJoias/ListarJoiasScreen';
-import DetalheJoiaScreen from './screens/detalheJoia/DetalheJoiaScreen';
-import Navbar from './components/navbar/Navbar';
-import CatalogoScreen from './screens/catalogo/catalogoScreen';
-import RelatoriosScreen from './screens/relatorios/RelatoriosScreen';
-import CriarContaScreen from './screens/criarConta/CriarContaScreen';
-import PerfilsScreen from './screens/perfils/PerfilsScreen';
+import { AuthContext } from './context/AuthContext.jsx'; // Importe o contexto
+import LoginScreen from './screens/login/LoginScreen.jsx';
+import HomeScreen from './screens/home/HomeScreen.jsx';
+import CadastroJoiasScreen from './screens/cadastro/CadastroJoiasScreen.jsx';
+import ListaJoiasScreen from './screens/listarJoias/ListarJoiasScreen.jsx';
+import DetalheJoiaScreen from './screens/detalheJoia/DetalheJoiaScreen.jsx';
+import Navbar from './components/navbar/Navbar.jsx';
+import CatalogoScreen from './screens/catalogo/catalogoScreen.jsx';
+import RelatoriosScreen from './screens/relatorios/RelatoriosScreen.jsx';
+import CriarContaScreen from './screens/criarConta/CriarContaScreen.jsx';
+import PerfilsScreen from './screens/perfils/PerfilsScreen.jsx';
 
 const AppLayout = ({ session }) => (
   <>

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import diamond from '../../assets/home/diamond.png';
 import files from '../../assets/home/files.png';
 import catalogue from '../../assets/home/catalogue.png';

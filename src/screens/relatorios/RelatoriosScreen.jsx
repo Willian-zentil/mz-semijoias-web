@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { supabase } from '../../superbase/supabaseConfig';
+import { supabase } from '../../superbase/supabaseConfig.js';
 import Styles from './RelatoriosScreen.module.css';
 
 function RelatoriosScreen() {

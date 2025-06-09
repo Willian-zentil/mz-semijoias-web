@@ -8,7 +8,7 @@ import CadastroJoiasScreen from './screens/cadastro/CadastroJoiasScreen.jsx';
 import ListaJoiasScreen from './screens/listarJoias/ListarJoiasScreen.jsx';
 import DetalheJoiaScreen from './screens/detalheJoia/DetalheJoiaScreen.jsx';
 import Navbar from './components/navbar/Navbar.jsx';
-import CatalogoScreen from './screens/catalogo/catalogoScreen.jsx';
+import CatalogoScreen from './screens/catalogo/CatalogoScreen.jsx';
 import RelatoriosScreen from './screens/relatorios/RelatoriosScreen.jsx';
 import CriarContaScreen from './screens/criarConta/CriarContaScreen.jsx';
 import PerfilsScreen from './screens/perfils/PerfilsScreen.jsx';

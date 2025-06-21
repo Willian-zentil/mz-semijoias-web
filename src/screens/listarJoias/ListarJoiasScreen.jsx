@@ -23,48 +23,88 @@ const ListaJoiasScreen = () => {
   const itemsPerPage = 15;
 
   useEffect(() => {
-    const syncAdminUserId = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+    const syncUserRole = async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error('Erro ao buscar usuário:', userError.message);
+        setError('Erro ao verificar perfil do usuário.');
+        setLoading(false);
+        return false;
+      }
       if (user) {
-        const { data: adminData, error: adminError } = await supabase
-          .from('administradores')
-          .select('id, user_id')
-          .eq('email', user.email)
-          .single();
+        const isRevendedora = user.user_metadata?.is_revendedora || false;
 
-        if (adminData && !adminData.user_id) {
-          console.log('Sincronizando user_id para:', user.id);
-          const { error: updateError } = await supabase
-            .from('administradores')
-            .update({ user_id: user.id })
-            .eq('id', adminData.id);
-          if (updateError) {
-            console.error('Erro ao sincronizar user_id:', updateError.message);
+        if (isRevendedora) {
+          const { data: revendedoraData, error: revError } = await supabase
+            .from('revendedoras')
+            .select('id')
+            .eq('user_id', user.id)
+            .single();
+
+          if (revError && revError.code !== 'PGRST116') {
+            console.error('Erro ao buscar revendedora:', revError.message);
+            setError('Erro ao verificar vínculo de revendedora.');
+            setLoading(false);
+            return false;
+          } else if (!revendedoraData) {
+            setError('Revendedora não vinculada. Contate o administrador.');
+            setLoading(false);
+            return false;
           }
         }
+        return true;
       }
+      setError('Usuário não autenticado.');
+      setLoading(false);
+      return false;
     };
 
     const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      setLoading(true);
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
         setError('Usuário não autenticado.');
         setLoading(false);
         return;
       }
 
-      // Sincronizar user_id antes de carregar dados
-      await syncAdminUserId();
+      // Verificar role do usuário
+      const isAuthorized = await syncUserRole();
+      if (!isAuthorized) return;
 
-      const { data: adminCheck } = await supabase
+      const { data: adminCheck, error: adminError } = await supabase
         .from('administradores')
         .select('user_id')
         .eq('user_id', user.id)
         .single();
 
-      const { data, error: fetchError } = adminCheck
-        ? await supabase.from('joias').select('*') // Admin vê todas as joias
-        : await supabase.from('joias').select('*').eq('user_id', user.id);
+      if (adminError && adminError.code !== 'PGRST116') {
+        console.error('Erro ao verificar administrador:', adminError.message);
+      }
+
+      const { data: revendedoraCheck, error: revError } = await supabase
+        .from('revendedoras')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (revError && revError.code !== 'PGRST116') {
+        console.error('Erro ao verificar revendedora:', revError.message);
+      }
+
+      let query;
+      if (adminCheck) {
+        query = supabase.from('joias').select('*'); // Admin vê todas as joias
+      } else if (revendedoraCheck) {
+        query = supabase.from('joias').select('*'); // Revendedora vê todas as joias
+      } else {
+        setError('Usuário não autorizado (nem administrador nem revendedora).');
+        setLoading(false);
+        return;
+      }
+
+      const { data, error: fetchError } = await query;
+      console.log('joias:', data, 'fetchError:', fetchError);
 
       if (fetchError) {
         setError(`Erro ao carregar joias: ${fetchError.message}`);
@@ -72,14 +112,19 @@ const ListaJoiasScreen = () => {
         setJoias(data || []);
         setFilteredJoias(data || []);
       }
-      setLoading(false);
 
-      const { data: revData, error: revError } = await supabase
+      const { data: revData, error: revFetchError } = await supabase
         .from('revendedoras')
         .select('nome');
-      if (revError) setError(revError.message);
-      else setRevendedoras(revData || []);
+      if (revFetchError) {
+        setError(`Erro ao carregar revendedoras: ${revFetchError.message}`);
+      } else {
+        setRevendedoras(revData || []);
+      }
+
+      setLoading(false);
     };
+
     fetchData();
   }, []);
 
@@ -200,7 +245,7 @@ const ListaJoiasScreen = () => {
         revendedoraComissao = data.taxa_de_comissao / 100;
       }
     }
-    const baseValue = valorVenda * 0.3; // 30% base
+    const baseValue = valorVenda * revendedoraComissao;
     return baseValue.toFixed(2);
   };
 
@@ -227,7 +272,7 @@ const ListaJoiasScreen = () => {
     if (isRevendedora) {
       const { data: revendedoraData, error: revendedoraError } = await supabase
         .from('revendedoras')
-        .select('id')
+        .select('id, taxa_de_comissao')
         .eq('nome', revendedoraSelecionada)
         .single();
       if (revendedoraError || !revendedoraData) {
@@ -235,7 +280,7 @@ const ListaJoiasScreen = () => {
         return;
       }
       revendedoraId = revendedoraData.id;
-      valorComissao = valorVenda * 0.3; // 30% de comissão
+      valorComissao = valorVenda * (revendedoraData.taxa_de_comissao / 100);
     }
 
     try {
@@ -308,7 +353,9 @@ const ListaJoiasScreen = () => {
     return (
       <div className={Styles.errorContainer}>
         <p className={Styles.errorText}>{error}</p>
-        <button className={Styles.retryButton} onClick={() => window.location.reload()}>Tentar novamente</button>
+        <button className={Styles.retryButton} onClick={() => window.location.reload()}>
+          Tentar novamente
+        </button>
       </div>
     );
   }
@@ -461,9 +508,7 @@ const ListaJoiasScreen = () => {
                 ))}
               </select>
               <p
-                className={`${Styles.revendedoraValue} ${
-                  !isRevendedora ? Styles.disabledText : ''
-                }`}
+                className={`${Styles.revendedoraValue} ${!isRevendedora ? Styles.disabledText : ''}`}
               >
                 Valor da Revendedora: R${revendedoraValue}
               </p>

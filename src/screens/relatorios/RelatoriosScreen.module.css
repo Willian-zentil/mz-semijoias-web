@@ -96,8 +96,10 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  overflow-x: auto; /* Adiciona rolagem horizontal em telas pequenas */
-  display: block; /* Garante que a tabela seja tratada como bloco */
+  overflow-x: auto;
+  /* Adiciona rolagem horizontal em telas pequenas */
+  display: block;
+  /* Garante que a tabela seja tratada como bloco */
 }
 
 .reportTable th,
@@ -105,7 +107,8 @@
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
-  white-space: nowrap; /* Impede que o texto quebre */
+  white-space: nowrap;
+  /* Impede que o texto quebre */
 }
 
 .reportTable th {
@@ -226,8 +229,19 @@
   margin: 20px 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
   gap: 10px;
+  align-items: center;
+}
+
+.comissaoRevendedoras {
+  background-color: rgb(36, 0, 243);
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 200px;
 }
 
 .totalVendas {
@@ -258,6 +272,19 @@
   padding: 15px;
   border-radius: 10px;
   min-width: 200px;
+}
+
+.comissaoRevendedoras,
+.lucroTotal,
+.cancelButton,
+.totalVendas {
+  margin: 0;
+  max-height: 40px;
+  min-width: 440px;
+}
+
+.lucroTotal {
+  min-width: 295px;
 }
 
 /* Media Query para mobile (telas até 992px) */
@@ -293,14 +320,16 @@
   .reportTable {
     display: block;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Melhora a rolagem em iOS */
   }
 
   .reportTable th,
   .reportTable td {
     font-size: 14px;
     padding: 6px;
-    white-space: normal; /* Permite quebra de texto em telas pequenas */
+    white-space: normal;
+    /* Permite quebra de texto em telas pequenas */
   }
 
   .reportTable th {
@@ -346,6 +375,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

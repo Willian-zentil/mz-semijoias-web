@@ -29,6 +29,7 @@ function CriarContaScreen() {
     }
 
     try {
+      // Registrar o usuário
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password: senha,
@@ -37,37 +38,18 @@ function CriarContaScreen() {
         },
       });
 
-      if (signUpError) throw signUpError;
+      if (signUpError) {
+        throw new Error(`Erro ao registrar usuário: ${signUpError.message}`);
+      }
 
       if (data.user) {
-        // Verificar e atualizar administradores
-        const { data: adminData, error: adminError } = await supabase
-          .from('administradores')
-          .select('id')
-          .eq('email', email)
-          .single();
-
-        if (adminError && adminError.code !== 'PGRST116') throw adminError;
-
-        if (adminData) {
-          const { error: updateError } = await supabase
-            .from('administradores')
-            .update({ user_id: data.user.id })
-            .eq('id', adminData.id);
-          if (updateError) throw updateError;
-        } else {
-          const { error: updateUserError } = await supabase
-            .from('users')
-            .update({ display_name: nome, is_revendedora: isRevendedora })
-            .eq('id', data.user.id);
-          if (updateUserError) throw updateUserError;
-        }
-
-        alert('Cadastro realizado com sucesso! Verifique seu e-mail para confirmação.');
+        console.log('Usuário criado:', data.user.id);
+        alert('Cadastro realizado com sucesso! Aguarde a aprovação do administrador.');
         navigate('/login');
       }
     } catch (err) {
       setError(`Erro ao criar conta: ${err.message}`);
+      console.error(err);
     }
   };
 

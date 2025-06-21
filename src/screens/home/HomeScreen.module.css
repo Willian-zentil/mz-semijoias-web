@@ -1,89 +1,55 @@
 .home {
-  background-color: #f3f4f6;
+  padding: 20px;
+  min-height: 100vh;
+  height: 100%;
+  background-color: #f4f4f4;
 }
 
 .homeContainer {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .nome {
-  text-transform: uppercase;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .cardList {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  max-width: 600px;
-  width: 100%;
 }
 
 .card {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 120px;
-  border: none;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
-  /* Remove o sublinhado padrão do <a> */
+  color: #333;
+  transition: transform 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
 }
 
 .cardImage {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 10px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
+  margin-bottom: 10px;
 }
 
 .cardTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.1rem;
+  font-weight: bold;
   text-align: center;
-  margin: 0;
-}
-
-/* Ajustes para telas menores */
-@media (max-width: 480px) {
-  .cardList {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    /* Cards menores em telas pequenas */
-    gap: 8px;
-  }
-
-  .card {
-    height: 100px;
-    padding: 10px;
-  }
-
-  .cardImage {
-    width: 30px;
-    height: 30px;
-    margin-bottom: 8px;
-  }
-
-  .cardTitle {
-    font-size: 14px;
-  }
 }

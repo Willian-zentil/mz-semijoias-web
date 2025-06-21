@@ -105,12 +105,16 @@ function RelatoriosScreen() {
     }, 0).toFixed(2);
   };
 
-  const calculateTotalLucro = () => {
-    const custoTotal = calculateTotalCusto()
-    const vendaTotal = calculateTotalVendas()
+  const calculateTotalComissaoRevendedoras = () => {
+    return vendasData.reduce((sum, venda) => sum + (venda.valor_comissao || 0) * venda.quantidade, 0).toFixed(2);
+  };
 
-    return (vendaTotal - custoTotal).toFixed(2)
-  }
+  const calculateTotalLucro = () => {
+    const custoTotal = parseFloat(calculateTotalCusto());
+    const vendaTotal = parseFloat(calculateTotalVendas());
+    const comissaoTotal = parseFloat(calculateTotalComissaoRevendedoras());
+    return (vendaTotal - custoTotal - comissaoTotal).toFixed(2);
+  };
 
   const exportJoiasPDF = async () => {
     const input = joiasRef.current;
@@ -312,6 +316,7 @@ function RelatoriosScreen() {
           <div className={Styles.summary}>
             <p className={Styles.totalVendas}>Total de Vendas: R${calculateTotalVendas()}</p>
             <p className={Styles.totalCusto}>Total de Custos: R${calculateTotalCusto()}</p>
+            <p className={Styles.comissaoRevendedoras}>Total para Revendedoras: R${calculateTotalComissaoRevendedoras()}</p>
             <p className={Styles.lucroTotal}>Total de Lucro: R${calculateTotalLucro()}</p>
           </div>
           {vendasData.length > 0 ? (

@@ -5,42 +5,47 @@ import diamond from '../../assets/home/diamond.png';
 import files from '../../assets/home/files.png';
 import catalogue from '../../assets/home/catalogue.png';
 import relatorio from '../../assets/home/relatorio.png';
-import woman from '../../assets/home/women.png'
-
+import woman from '../../assets/home/women.png';
 import Styles from './HomeScreen.module.css';
 
 const HomeScreen = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUserData = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      console.log('Session:', session); // Depuração
       if (session?.user) {
-        const userMetadata = session.user.user_metadata;
+        const userMetadata = session.user.user_metadata || {};
+        console.log('User Metadata:', userMetadata); // Depuração
         const displayName = userMetadata.display_name || 'Guest';
         setUserData({
           display_name: displayName.split(' ')[0],
-          isRevendedora: userMetadata.isRevendedora || false,
+          isRevendedora: userMetadata.is_revendedora || false,
         });
       } else {
         setUserData(null);
       }
+      setLoading(false);
     };
 
     getUserData();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth State Change Session:', session); // Depuração
       if (session?.user) {
-        const userMetadata = session.user.user_metadata;
+        const userMetadata = session.user.user_metadata || {};
         const displayName = userMetadata.display_name || 'Guest';
         setUserData({
           display_name: displayName.split(' ')[0],
-          isRevendedora: userMetadata.isRevendedora || false,
+          isRevendedora: userMetadata.is_revendedora || false,
         });
       } else {
         setUserData(null);
       }
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -54,12 +59,28 @@ const HomeScreen = () => {
     { id: '5', title: 'Revendedoras', screen: '/perfils', image: woman },
   ];
 
+  const filteredCards = userData
+    ? (userData.isRevendedora
+      ? cards.filter(card => ['Catálogos', 'Relatórios'].includes(card.title))
+      : cards)
+    : [];
+
   const renderCard = (item) => (
     <a key={item.id} className={Styles.card} onClick={() => navigate(item.screen)} role="button" tabIndex={0} onKeyPress={(e) => e.key === 'Enter' && navigate(item.screen)}>
       {item.image && <img src={item.image} alt={item.title} className={Styles.cardImage} />}
       <p className={Styles.cardTitle}>{item.title}</p>
     </a>
   );
+
+  if (loading) {
+    return (
+      <div className={Styles.home}>
+        <div className={Styles.homeContainer}>
+          <h2 className={Styles.nome}>Carregando...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={Styles.home}>
@@ -68,7 +89,7 @@ const HomeScreen = () => {
           {userData ? `Olá ${userData.display_name}!` : 'Olá Lojista!'}
         </h2>
         <div className={Styles.cardList}>
-          {cards.map((item) => renderCard(item))}
+          {filteredCards.map((item) => renderCard(item))}
         </div>
       </div>
     </div>
